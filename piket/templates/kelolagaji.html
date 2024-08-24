@@ -1,0 +1,229 @@
+{% extends 'base.html' %} {% load static %} {% load humanize %}  {% block content %}
+                    <div class="container-xxl">
+                        <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
+                            <div class="flex-grow-1">
+                                <h4 class="fs-18 fw-semibold m-0">{{menu}}</h4>
+                            </div>
+            
+                           
+                        </div>
+                        <form action="#" method="post" id="simpankelolagaji" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <div class="row">
+
+                                <div class="col-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <label for="example-select" class="form-label">Pilih Tahun Pelajaran</label>
+                                            <select class="form-select" id="tahun" name="tahun">
+                                                <option value="0" selected>--- Pilih Tahun Pelajaran ---</option>
+                                                {% for th in tahun %}
+                                                <option value="{{th.id}}">{{th.nama}}</option>
+                                               {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <label for="example-select" class="form-label">Pilih Guru</label>
+                                            <select class="form-select" id="guru" name="guru">
+                                                <option value="0" selected>--- Pilih Guru ---</option>
+                                                {% for gr in guru %}
+                                                <option value="{{gr.id}}">{{gr.nama_guru}}</option>
+                                               {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                      
+                                        <label for="example-date" class="form-label">Pilih Tanggal:</label>
+                                        <input type="date" id="tanggal" name="tanggal" class="form-control" name="date">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col" width="12%"><input type="checkbox" class="checkAll" name="checkAll" /> Pilih Semua</th>
+                                                        
+                                                        <th scope="col">Jam Ke-</th>
+                                                        <th scope="col">Jam dari sampai</th>
+                                                        
+                                                        
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for row in data %}
+                                                    <tr>
+                                                        <td><input type="checkbox" name="item[]" id="pilihdata" value="{{row.id}}"></td>
+                                                
+                                                        <td>{{row.jam_ke}}</td>
+                                                        <td>{{row.jam_pelajaran_dari_ke}}</td>
+                                                    
+                                                    
+                                                    </tr>
+                                                    {% empty %}
+                                                    <tr>
+                                                        <td colspan="3" align="center">Data Jam Kosong</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                    
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <button type="submit" id="simpandata" class="btn btn-primary"><i data-feather="save"></i> SIMPAN</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div> <!-- container-fluid -->
+                    <script type="text/javascript" language="javascript">
+                        $(document).ready(function() {
+                            $(".checkAll").on("click", function() {
+                              $(this)
+                                .closest("table")
+                                .find("tbody :checkbox")
+                                .prop("checked", this.checked)
+                                .closest("tr")
+                                .toggleClass("selected", this.checked);
+                            });
+                          
+                            $("tbody :checkbox").on("click", function() {
+                              // toggle selected class to the checkbox in a row
+                              $(this)
+                                .closest("tr")
+                                .toggleClass("selected", this.checked);
+                          
+                              // add selected class on check all
+                              $(this).closest("table")
+                                .find(".checkAll")
+                                .prop("checked",
+                                  $(this)
+                                    .closest("table")
+                                    .find("tbody :checkbox:checked").length ==
+                                    $(this)
+                                      .closest("table")
+                                      .find("tbody :checkbox").length
+                                );
+                            });
+                          });
+                      
+                          $('body').on('submit', '#simpankelolagaji',function(e) {
+                              e.preventDefault();
+                              if(confirm('Penyimpanan guru sesuai jam pelajaran akan diproses')){
+                                  var id=[];
+                                  var csr = $("input[name=csrfmiddlewaretoken]").val();
+                                  var  guru =$('#guru').val();
+                                  var  tahun =$('#tahun').val();
+                                  var  tanggal =$('#tanggal').val();
+                                  $(':checkbox:checked').each(function(i){
+                                    id[i]=$(this).val()
+                                  })
+                          
+                                  var removeItem = 'on';
+                                  id = jQuery.grep(id, function(value) {
+                                    return value != removeItem;
+                                  });
+
+                                  if(tahun == "0"){
+                                    swal({
+                                        title: "Perhatikan!!",
+                                        text: "Tahun Belum dipilih",
+                                        closeModal: false
+                                    }).then(function() {
+                                            swal.close();
+                                            $('#tahun').focus();
+                                    });
+                          
+                                    }else if (guru== "0") {
+                                        swal({
+                                            title: "Perhatikan!!",
+                                            text: "Guru Belum dipilih",
+                                            closeModal: false
+                                        }).then(function() {
+                                                swal.close();
+                                                $('#guru').focus();
+                                        });
+                            
+                                    }else if(tanggal== ""){
+                                        swal({
+                                            title: "Perhatikan!!",
+                                            text: "Tanggal Belum dipilih",
+                                            closeModal: false
+                                        }).then(function() {
+                                                swal.close();
+                                                $('#tanggal').focus();
+                                        });
+                                    }else{
+                                        if(id.length===0){
+                                            alert("Silakan pilih Jam Pelajaran sesuai jam Guru masuk")
+                                        }else{
+                                  
+                                        $('#simpandata').attr('disabled','disabled'); 
+                                        mydata = {id :id,tahun:tahun,guru:guru,tanggal:tanggal,csrfmiddlewaretoken: csr};
+                                      
+                                  $.ajax({
+                                        type: "POST",
+                                        url: "{% url 'simpankelolagaji' %}",
+                                        data: mydata,
+                                        success: function (data) { 
+                                            
+                                            swal({
+                                                title: "Info",
+                                                text: "Data Berhasil tersimpan",
+                                                icon: "success",
+                                                button: "Ok",
+                                            });
+                                            
+                                              $('#simpandata').removeAttr('disabled','disabled'); 
+                                               $('form')[0].reset();
+                                               $('.checkAll').prop('checked', false);
+                                               
+                                               $('input[name="item[]"]').each(function() {
+                                                  this.checked = false;
+                                              });
+                                               
+                                              
+                                               $('#guru').val("0");
+                                            
+                                                
+                                                
+                      
+                                             
+                                                 
+                                          
+                                        }
+                                    });
+                                  }
+                          
+                              }
+                          
+                          
+                              }
+                               
+                        }); 
+                </script>
+{% endblock content %}
+      

@@ -1,0 +1,97 @@
+<ul id="side-menu">
+    <li class="menu-title">Menu</li>
+    {% for group in user.groups.all  %}
+        {% if group.name == "administrator" %}
+        <li>
+            <a href='{% url "berandaadmin" %}'>
+                <i data-feather="home"></i>
+                <span> Dashboard </span>
+            </a>
+        </li>
+        <li class="menu-title">Master Data</li>
+        <li>
+            <a href='{% url "tahunpelajaran" %}'>
+                <i data-feather="cpu"></i>
+                <span> Tahun Akademik </span>
+            </a>
+        </li>
+        <li>
+            <a href='{% url "guruadmin" %}'>
+                <i data-feather="file-text"></i>
+                <span> Guru </span>
+            </a>
+        </li>
+        <li>
+            <a href='{% url "piketadmin" %}'>
+                <i data-feather="layers"></i>
+                <span> Piket </span>
+            </a>
+        </li>
+        <li class="menu-title">Data Transaksi</li>
+        <li>
+            <a href='{% url "jampelajaran" %}'>
+                <i data-feather="lock"></i>
+                <span> Jam Pelajaran </span>
+            </a>
+        </li>
+        <li>
+            <a href='{% url "settinggaji" %}'>
+                <i data-feather="credit-card"></i>
+                <span> Setting Gaji  </span>
+            </a>
+        </li>
+        <li>
+            <a href='{% url "gajiadmin" %}'>
+                <i data-feather="archive"></i>
+                <span> Data Gaji  </span>
+            </a>
+        </li>
+
+        {% endif %}
+        {% if group.name == "piket" %}
+
+        <li>
+            <a href='{% url "berandapiket" %}'>
+                <i data-feather="home"></i>
+                <span> Dashboard </span>
+            </a>
+        </li>
+        <li>
+            <a href='{% url "kelolagaji" %}'>
+                <i data-feather="credit-card"></i>
+                <span> Kelola Gaji  </span>
+            </a>
+        </li>
+        <li>
+            <a href='{% url "gajipiket" %}'>
+                <i data-feather="archive"></i>
+                <span> Data Gaji  </span>
+            </a>
+        </li>
+        {% endif %}
+        {% if group.name == "guru" %}
+        <li>
+            <a href='{% url "berandaguru" %}'>
+                <i data-feather="home"></i>
+                <span> Dashboard </span>
+            </a>
+        </li>
+        <li>
+            <a href='{% url "gajiguru" %}'>
+                <i data-feather="credit-card"></i>
+                <span> Data Gaji  </span>
+            </a>
+        </li>
+        {% endif %}
+    {% endfor %}
+
+    
+    <li class="menu-title">Data Lainnya</li>
+    <li>
+        <a href='{% url "logout" %}'>
+            <i data-feather="log-out"></i>
+            <span> Logout </span>
+        </a>
+    </li>
+    
+</ul>
